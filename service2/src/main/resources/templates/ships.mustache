@@ -1,0 +1,12 @@
+<div style="display: flex">
+    <div>
+        {{> navigation}}
+    </div>
+    <div>
+        <h1>Корабли</h1>
+        {{#ships}}
+        <p>Корабль с id={{id}} и именем "{{name}}" содержит {{marinesNum}} десантников</p>
+        {{/ships}}
+
+    </div>
+</div>

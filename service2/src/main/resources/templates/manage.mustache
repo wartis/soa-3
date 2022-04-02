@@ -1,0 +1,20 @@
+<div style="display: flex">
+    <div>
+        {{> navigation}}
+    </div>
+    <div>
+        <form name="load" action="/front/add" method="post">
+            ShipId: <input type="number" min="1" name="shipId" /><br/>
+            MarineId: <input type="number" min="1" name="marineId" /><br/>
+            <input type="submit" value="Погрузить десантника" />
+        </form>
+        {{message}}
+
+        <form name="unload" action="/front/remove" method="post">
+            ShipId: <input type="number" min="1" name="shipId" /><br/>
+            <input type="submit" value="Выгрузить десантников" />
+        </form>
+        {{message1}}
+
+    </div>
+</div>
