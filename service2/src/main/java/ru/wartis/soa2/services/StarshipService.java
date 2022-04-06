@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.wartis.soa2.entities.SpaceMarine;
 import ru.wartis.soa2.entities.SpaceShip;
-import ru.wartis.soa2.exceptions.NotFoundException;
+import ru.wartis.soa2.exceptions.UnloadAllSpaceMarinesRequestFault;
 import ru.wartis.soa2.exceptions.ResponseParsingException;
 import ru.wartis.soa2.repos.SpaceMarineRepository;
 import ru.wartis.soa2.repos.StarshipRepository;
@@ -30,10 +30,10 @@ public class StarshipService {
         restClient.isAlive();
     }
 
-    public void loadSpaceMarineToShip(Long spaceMarineId, Long shipId)  {
+    public void loadSpaceMarineToShip(Long spaceMarineId, Long shipId) throws UnloadAllSpaceMarinesRequestFault {
         final Optional<SpaceShip> spaceShipOptional = starshipRepository.findById(shipId);
         final SpaceShip spaceShip = spaceShipOptional.orElseThrow(() ->
-            new NotFoundException("Starship с id=" + shipId + " не найден!"));
+            new UnloadAllSpaceMarinesRequestFault("Starship with id=" + shipId + " NOT FOUND!"));
 
         try {
             final SpaceMarine spaceMarine = restClient.getSpaceMarineById(spaceMarineId);
@@ -42,15 +42,15 @@ public class StarshipService {
             starshipRepository.save(spaceShip);
         } catch (JAXBException e) {
             e.printStackTrace();
-            throw new ResponseParsingException("Запрашиваемый сервис прислал невалидное тело. " +
-                "Не удалось построить из него объект.");
+            throw new ResponseParsingException("Requested service sent invalid body. " +
+                "The object couldn't be built.");
         }
     }
 
-    public void unloadAllSpaceMarines(Long shipId) {
+    public void unloadAllSpaceMarines(Long shipId) throws UnloadAllSpaceMarinesRequestFault {
         final Optional<SpaceShip> spaceShipOptional = starshipRepository.findById(shipId);
         final SpaceShip spaceShip = spaceShipOptional.orElseThrow(() ->
-            new NotFoundException("Starship с id=" + shipId + " не найден!"));
+            new UnloadAllSpaceMarinesRequestFault("Starship with id=" + shipId + " not found!"));
 
         final List<SpaceMarine> all = spaceMarineRepository.findAllBySpaceShip(spaceShip);
         all.forEach(el -> el.setSpaceShip(null));

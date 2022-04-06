@@ -13,6 +13,7 @@
         <module>ejb</module>
         <module>service1</module>
         <module>service2</module>
+        <module>soapService</module>
     </modules>
 
     <properties>
