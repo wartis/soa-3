@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.wartis.soa2.entities.SpaceMarine;
 import ru.wartis.soa2.services.JaxbService;
+import ru.wartis.soa2.util.AddressUtil;
 
 import javax.xml.bind.JAXBException;
 
@@ -15,12 +16,13 @@ import javax.xml.bind.JAXBException;
 @Service
 public class RestClient {
 
-    @Value("${target.url}")
-    private String URI;
-
     private final RestTemplate restTemplate;
 
+    private final AddressUtil addressUtil;
+
     public void isAlive() {
+        final String URI = addressUtil.getUriOfSecondService();
+
         final ResponseEntity<String> str =
             restTemplate.getForEntity(URI + "/alive", String.class);
 
@@ -28,6 +30,8 @@ public class RestClient {
     }
 
     public SpaceMarine getSpaceMarineById(Long spaceMarineId) throws JAXBException {
+        final String URI = addressUtil.getUriOfSecondService();
+
         final ResponseEntity<String> strEntity =
             restTemplate.getForEntity(URI + "/spacemarines/" + spaceMarineId, String.class);
 
